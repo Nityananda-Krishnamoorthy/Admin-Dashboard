@@ -9,9 +9,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { SketchPicker } from "react-color";
 import { useTheme } from "@mui/material/styles";
 import DropzoneWrapper from "components/DropzoneWrapper";
+import { useNavigate } from "react-router-dom";
+
 
 const UploadForm = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const defaultProduct = {
     code: "", name: "", category: "", subCategory: "",
@@ -53,16 +56,21 @@ const UploadForm = () => {
     setVariants(updated);
   };
 
-  const handleDiscard = () => {
-    setProduct(defaultProduct);
-    setVariants(defaultVariants);
+  const handleDiscard = (e) => {
+   setProduct(defaultProduct);
+setVariants(defaultVariants);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Product Data:", product);
-    console.log("Variants:", variants);
-  };
+  e.preventDefault();
+  navigate("/preview", {
+    state: { product, variants },
+  });
+};
+
+
+  
+
 
   return (
     <Box p={3} component="form" onSubmit={handleSubmit}>
@@ -255,7 +263,7 @@ const UploadForm = () => {
         <Grid item xs={12}>
           <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
             <Button variant="outlined" color="error" onClick={handleDiscard}>Discard</Button>
-            <Button variant="contained" color="primary" type="submit">Continue</Button>
+            <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>Continue</Button>
           </Box>
         </Grid>
       
