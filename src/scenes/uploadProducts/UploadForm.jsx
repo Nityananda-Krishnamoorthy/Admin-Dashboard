@@ -9,12 +9,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { SketchPicker } from "react-color";
 import { useTheme } from "@mui/material/styles";
 import DropzoneWrapper from "components/DropzoneWrapper";
-import { useNavigate } from "react-router-dom";
 
 
-const UploadForm = () => {
+
+const UploadForm = ({ onBack, onSubmit }) => {
   const theme = useTheme();
-  const navigate = useNavigate();
+
 
   const defaultProduct = {
     code: "", name: "", category: "", subCategory: "",
@@ -49,12 +49,20 @@ const UploadForm = () => {
     updated[index][field] = value;
     setVariants(updated);
   };
+  
+const handleVariantImageUpload = (index, files) => {
+  const updated = [...variants];
+  const validFiles = Array.isArray(files)
+    ? files.filter((file) => file instanceof File)
+    : files instanceof File
+    ? [files]
+    : [];
 
-  const handleVariantImageUpload = (index, file) => {
-    const updated = [...variants];
-    updated[index].image = file;
-    setVariants(updated);
-  };
+  updated[index].image = validFiles;
+  setVariants(updated);
+};
+
+
 
   const handleDiscard = (e) => {
    setProduct(defaultProduct);
@@ -62,18 +70,29 @@ setVariants(defaultVariants);
   };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
-  navigate("/preview", {
-    state: { product, variants },
-  });
-};
+    e.preventDefault();
+    if (!product.code || !product.name || !product.category || !product.productType) {
+  alert("Please fill all required product fields.");
+  return;
+    }
+
+    for (let i = 0; i < variants.length; i++) {
+      if (!variants[i].size || !variants[i].quantity) {
+        alert(`Please complete all fields for variant ${i + 1}.`);
+        return;
+      }
+    }
+
+    onSubmit(product, variants);
+  };
 
 
   
 
 
-  return (
-    <Box p={3} component="form" onSubmit={handleSubmit}>
+   return (
+    
+    <Box p={3} component="form"   onSubmit={handleSubmit}>
       <Typography variant="h5" mb={3}>Upload New Product</Typography>
       <Grid container spacing={2} >
         {/** Product Code */}
@@ -212,20 +231,17 @@ setVariants(defaultVariants);
               <Box display="flex" justifyContent="space-between" mb={0}>
               <Typography fontWeight="bold">Upload Image</Typography>
                {variants.length > 1 && (
-                <Link color="error" onClick={() => {
-                  const handleVariantImageUpload = (index, files) => {
-                  const updated = [...variants];
-                  updated[index].image = files;
+               <Link color="error" onClick={() => {
+                  const updated = variants.filter((_, i) => i !== index);
                   setVariants(updated);
-                };
-
                 }}>
                   Delete Item
                 </Link>
+
               )}
               </Box>
               {variant.image.length === 0 && (
-                <DropzoneWrapper
+               <DropzoneWrapper
                   onDrop={(acceptedFiles) => handleVariantImageUpload(index, acceptedFiles)}
                 />
               )}
@@ -263,7 +279,7 @@ setVariants(defaultVariants);
         <Grid item xs={12}>
           <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
             <Button variant="outlined" color="error" onClick={handleDiscard}>Discard</Button>
-            <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>Continue</Button>
+            <Button variant="contained" color="primary" type="submit">Continue</Button>
           </Box>
         </Grid>
       
