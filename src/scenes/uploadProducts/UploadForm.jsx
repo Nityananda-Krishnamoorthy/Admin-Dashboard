@@ -20,7 +20,7 @@ const UploadForm = () => {
   };
 
   const defaultVariants = [
-    { color: "#000000", size: "", quantity: "", image: null, showColorPicker: false },
+    { color: "#000000", size: "", quantity: "", image: [], showColorPicker: false },
   ];
 
   const [product, setProduct] = useState(defaultProduct);
@@ -205,19 +205,37 @@ const UploadForm = () => {
               <Typography fontWeight="bold">Upload Image</Typography>
                {variants.length > 1 && (
                 <Link color="error" onClick={() => {
-                  const updated = variants.filter((_, i) => i !== index);
+                  const handleVariantImageUpload = (index, files) => {
+                  const updated = [...variants];
+                  updated[index].image = files;
                   setVariants(updated);
+                };
+
                 }}>
                   Delete Item
                 </Link>
               )}
               </Box>
-              <DropzoneWrapper
-                onDrop={(files) => handleVariantImageUpload(index, files[0])}
-              />
-              {variant.image && (
-                <Typography variant="body2" mt={1}>{variant.image.name}</Typography>
+              {variant.image.length === 0 && (
+                <DropzoneWrapper
+                  onDrop={(acceptedFiles) => handleVariantImageUpload(index, acceptedFiles)}
+                />
               )}
+             {variant.image.length > 0 && (
+                <Box display="flex" flexWrap="wrap" gap={1} mt={1}>
+                  {variant.image.map((file, i) => (
+                    <img
+                      key={i}
+                      src={URL.createObjectURL(file)}
+                      alt={`preview-${i}`}
+                      style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 8 }}
+                      onLoad={(e) => URL.revokeObjectURL(e.target.src)}
+                    />
+                  ))}
+                </Box>
+              )}
+
+
             </Grid>
 
             {/* <Grid item xs={1} md={2} display="flex" alignItems="center">
