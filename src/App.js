@@ -7,6 +7,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "scenes/dashboard";
 import Layout from "scenes/layout";
 import UploadProducts from "scenes/uploadProducts";
+import Orders from "scenes/orders";
+import DeliveryTracking from "scenes/deliveryTracking";
+import Stocks from "scenes/stocks";
+import Expense from "scenes/expense";
+import Reviews from "scenes/reviews";
+import Advertisement from "scenes/advertisement";
 
 
 
@@ -23,6 +29,12 @@ function App() {
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/upload-products" element={<UploadProducts />} />
+                  <Route path="/orders" element={<Orders/>} />
+                  <Route path="/delivery-tracking" element={<DeliveryTracking />} />
+                  <Route path="/stocks" element={<Stocks />} />
+                  <Route path="/expense" element={<Expense />} />
+                  <Route path="/reviews-&-ratings" element={<Reviews />} />
+                  <Route path="/advertisement" element={<Advertisement />} />
                 </Route>
               </Routes>
         </ThemeProvider>

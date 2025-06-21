@@ -1,70 +1,87 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Box, Typography, Grid, Button, Chip
-} from "@mui/material";
+import { Box, Typography, Button, Chip, Stack } from "@mui/material";
 
 const ProductPreview = ({ product, variants, onBack }) => {
-  const navigate = useNavigate();
   if (!product || !variants) {
     return <Typography color="error">No product data available for preview.</Typography>;
   }
 
   return (
-   <Box p={4}>
+    <Box p={4}>
       <Typography variant="h5" mb={2}>New Product</Typography>
-      
-      <Grid item xs={12}>
-      <Typography ><b>Product Code:</b> {product.code}</Typography>
-        <Typography><b>Product Category:</b> {product.category}</Typography>
-        <Typography><b>Sub Category:</b> {product.subCategory}</Typography>
-        <Typography><b>Product Name:</b> {product.name}</Typography>
-        <Typography><b>Product Type:</b> {product.productType}</Typography>
-        <Typography><b>Price:</b> ₹{product.price}</Typography>
-        <Typography><b>GST:</b> {product.gst}</Typography>
-        <Box>
-        <Typography><b>Colours:</b></Typography>
-          <Box display="flex" gap={1} mt={1}>
-            {variants.map((v, i) => (
-              <Box key={i} sx={{ width: 20, height: 20, bgcolor: v.color, borderRadius: '50%' }} />
-            ))}
-          </Box>
-          </Box>
-        <Typography><b>Sizes:</b> {variants.map(v => v.size).filter(Boolean).join(', ')}</Typography>
-        <Box>
-        <Typography><b>Photos:</b></Typography>
-          <Box display="flex" flexWrap="wrap" mt={1} gap={1}>
-            {variants.map((v, i) =>
-                Array.isArray(v.image)
-                  ? v.image.map((file, j) =>
+
+      {/* Product Info */}
+      <Stack spacing={1} mb={4}>
+        <Typography><b>Product Code:</b> &nbsp;{product.code}</Typography>
+        <Typography><b>Category:</b> &nbsp;{product.category}</Typography>
+        <Typography><b>Sub Category:</b>&nbsp; {product.subCategory}</Typography>
+        <Typography><b>Product Name:</b>&nbsp; {product.name}</Typography>
+        <Typography><b>Product Type:</b> &nbsp;{product.productType}</Typography>
+        <Typography><b>Price:</b> &nbsp;₹{product.price}</Typography>
+        <Typography><b>GST:</b> &nbsp;{product.gst}</Typography>
+      </Stack>
+
+      {/* Variants */}
+      <Box mt={2}>
+        <Typography variant="h6" gutterBottom><b>Variants</b></Typography>
+        <Stack spacing={2}>
+          {variants.map((variant, index) => (
+            <Box key={index} p={2} border="1px solid #ccc" borderRadius={2}>
+              <Typography variant="subtitle1"><b>Variant {index + 1}</b></Typography>
+
+              <Stack direction="row" spacing={1} alignItems="center" mt={1}>
+                <Typography><b>Color:</b></Typography>&nbsp;
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    backgroundColor: variant.color,
+                    border: "1px solid #999"
+                  }}
+                />
+              </Stack>
+
+              <Typography mt={1}><b>Size:</b> &nbsp;{variant.size || "N/A"}</Typography>
+              <Typography><b>Quantity:</b> &nbsp;{variant.quantity || "N/A"}</Typography>
+
+              <Box mt={1}>
+                <Typography><b>Photos:</b></Typography>&nbsp;
+                <Stack direction="row" flexWrap="wrap" gap={1} mt={1}>
+                  {Array.isArray(variant.image) && variant.image.length > 0 ? (
+                    variant.image.map((file, j) =>
                       file instanceof File ? (
                         <img
-                          key={`${i}-${j}`}
+                          key={j}
                           src={URL.createObjectURL(file)}
-                          alt={`preview-${j}`}
-                          style={{ height: 70, borderRadius: 5 }}
+                          alt={`variant-${index}-photo-${j}`}
+                          style={{ height: 56, width: 56, objectFit: "cover", borderRadius: 5 }}
                           onLoad={(e) => URL.revokeObjectURL(e.target.src)}
                         />
                       ) : null
                     )
-                  : null
-              )}
+                  ) : (
+                    <Typography fontSize="0.875rem" color="text.secondary">No image uploaded</Typography>
+                  )}
+                </Stack>
+              </Box>
+            </Box>
+          ))}
+        </Stack>
+      </Box>
 
-          </Box>
+      {/* Status and Actions */}
+      <Box mt={4}>
+        <Typography><b>Status:</b></Typography>&nbsp;
+        <Stack direction="row" spacing={2} mt={1}>
+          <Chip label="Active" color="success" />
+          <Chip label="Inactive" color="error" variant="outlined" />
+          <Chip label="Out of Stock" color="primary" variant="outlined" />
+        </Stack>
 
-        </Box>
-        <Box>
-          <b>Status:</b>
-          <Box display="flex" mt={1} gap={2}>
-            <Chip label="Active" color="success" />
-            <Chip label="Inactive" color="error" variant="outlined" />
-            <Chip label="Out of Stock" color="primary" variant="outlined" />
-          </Box>
-        </Box>
-      </Grid>
-
-      <Box mt={4} display="flex" justifyContent="flex-end" gap={2}>
-        <Button variant="outlined" onClick={onBack}>Back</Button>
-        <Button variant="contained" color="primary">Submit Product</Button>
+        <Stack direction="row" justifyContent="flex-end" spacing={2} mt={4}>
+          <Button variant="outlined" onClick={onBack}>Back</Button>
+          <Button variant="contained" color="primary">Submit Product</Button>
+        </Stack>
       </Box>
     </Box>
   );
