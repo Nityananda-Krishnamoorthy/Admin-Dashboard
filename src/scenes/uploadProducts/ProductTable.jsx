@@ -10,13 +10,15 @@ import {
   Paper,
   IconButton,
   Typography,
-  useTheme
+  useTheme,
+  //Pagination
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const ProductTable = ({ status }) => {
   const theme = useTheme();
+  // const [page, setPage] = useState(1);
   // Fake product data for now
 const products = [
   { id: "001", date: "10/11/2023", code: "001", category: "Men", subCategory: "T-shirt", product: "Men Printed Polo", price: "Rs. 100", gst: "10%", status: "Active" },
@@ -130,6 +132,9 @@ const products = [
           </TableBody>
         </Table>
       </TableContainer>
+      {/* <Box display="flex" justifyContent="center" mt={3}>
+        <Pagination count={5} page={page} onChange={(e, val) => setPage(val)} />
+      </Box> */}
     </Box>
   );
 };

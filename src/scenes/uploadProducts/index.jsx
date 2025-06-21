@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Tabs, Tab, Typography, Button } from "@mui/material";
+import { Box, Tabs, Tab, Typography, Button, Pagination} from "@mui/material";
 import ProductTable from "./ProductTable";
 import UploadForm from "./UploadForm";
 import ProductPreview from "./ProductPreview";
@@ -9,6 +9,7 @@ const UploadProducts = () => {
   const [viewMode, setViewMode] = useState("table"); // "table", "form", "preview"
   const [productData, setProductData] = useState(null);
   const [variantData, setVariantData] = useState(null);
+  const [page, setPage] = useState(1);
 
   const handleFormSubmit = (product, variants) => {
     setProductData(product);
@@ -52,7 +53,12 @@ const UploadProducts = () => {
           onBack={() => setViewMode("form")}
         />
       )}
+       {/* Pagination */}
+      <Box display="flex" justifyContent="center" mt={3}>
+        <Pagination count={5} page={page} onChange={(e, val) => setPage(val)} />
+      </Box>
     </Box>
+    
   );
 };
 
