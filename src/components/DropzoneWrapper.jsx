@@ -20,7 +20,7 @@ const DropzoneWrapper = ({ onDrop }) => {
         textAlign: 'center',
         backgroundColor: 'primary',
         cursor: 'pointer',
-        height: 60,
+        height: 56,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

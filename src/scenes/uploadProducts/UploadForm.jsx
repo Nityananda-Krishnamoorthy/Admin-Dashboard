@@ -228,7 +228,7 @@ const UploadForm = () => {
                       key={i}
                       src={URL.createObjectURL(file)}
                       alt={`preview-${i}`}
-                      style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 8 }}
+                      style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 8 }}
                       onLoad={(e) => URL.revokeObjectURL(e.target.src)}
                     />
                   ))}
