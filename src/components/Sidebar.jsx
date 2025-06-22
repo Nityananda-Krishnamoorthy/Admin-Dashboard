@@ -27,8 +27,8 @@ import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import FlexBetween from "components/FlexBetween";
-import profileImage from "assets/profile.jpg";
+// import FlexBetween from "components/FlexBetween";
+// import profileImage from "assets/profile.jpg";
 
 const navItems = [
   { text: "Dashboard", icon: <HomeOutlined /> },

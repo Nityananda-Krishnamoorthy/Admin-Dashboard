@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
   Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, IconButton, Typography, useTheme, TextField, InputAdornment,
-  Pagination, Stack
+  Paper, IconButton, Typography, useTheme,
+  Pagination, 
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import SearchIcon from "@mui/icons-material/Search";
+
 
 const ProductTable = ({ status }) => {
   const theme = useTheme();

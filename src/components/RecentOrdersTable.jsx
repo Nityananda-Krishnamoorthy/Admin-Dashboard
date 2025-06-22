@@ -34,7 +34,7 @@ const getStatusColor = (status) => {
 
 const RecentOrdersTable = () => {
   const theme = useTheme();
-  const rowsPerPage = 4;
+  const rowsPerPage = 5;
   const [page, setPage] = useState(1);
 
   const paginated = sampleOrders.slice((page - 1) * rowsPerPage, page * rowsPerPage);
@@ -44,7 +44,7 @@ const RecentOrdersTable = () => {
     <Box>
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="h6" fontWeight="bold">Recent Orders</Typography>
-          <Button component={Link} to="/orders" variant="contained" size="small">
+          <Button component={Link} to="/orders" variant="outlined" color="secondary" size="small">
             View All
           </Button>
         </Box>
