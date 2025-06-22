@@ -6,6 +6,10 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SearchIcon from '@mui/icons-material/Search';
+import UploadForm from "./UploadForm";
+import ProductPreview from "./ProductPreview";
+
+
 
 const stockData = [
   { id: 1, code: "001", category: "Men", subCategory: "T-shirt", product: "Printed T-shirt", date: "07/12/2023", qty: 100 },
@@ -21,13 +25,20 @@ const stockData = [
 ];
 
 const categories = ["All", "Men", "Women", "Kids", "Accessories"];
-
+  const handleFormSubmit = (product, variants) => {
+    setProductData(product);
+    setVariantData(variants);
+    setViewMode("preview");
+  };
 const Stocks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("All");
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const theme = useTheme();
+   const [viewMode, setViewMode] = useState("table"); // "table", "form", "preview"
+  const [productData, setProductData] = useState(null);
+  const [variantData, setVariantData] = useState(null);
 
   const handleAddMore = (id) => {
     alert(`Add more stock for ID: ${id}`);
@@ -79,10 +90,24 @@ const Stocks = () => {
   </Box>
 
   {/* Right side: Button */}
-  <Box>
-    <Button variant="contained" color="secondary">+ New Product</Button>
-  </Box>
-</Box>
+          <Box >
+            <Button variant="contained" color="secondary" onClick={() => setViewMode("form")}>
+              + New Product
+            </Button>
+          </Box>
+         {viewMode === "form" && (
+        <UploadForm
+          onBack={() => setViewMode("table")}
+          onSubmit={(product, variants) => handleFormSubmit(product, variants)}
+        />
+      )}
+        {viewMode === "preview" && (
+        <ProductPreview
+          product={productData}
+          variants={variantData}
+          onBack={() => setViewMode("form")}
+        />
+      )}
 
 
 
