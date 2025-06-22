@@ -4,8 +4,17 @@ import {
   useTheme, Divider, Dialog, DialogTitle, DialogContent, TextField,
   DialogActions,
 } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useDropzone } from "react-dropzone";
+
 
 // Images
 import Mens from "../../assets/images/Mens.jpeg";
