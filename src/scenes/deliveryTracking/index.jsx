@@ -4,7 +4,7 @@ import {
   TableHead, TableRow, Paper, Button, Chip, useTheme, Grid, TextField,
    MenuItem, Pagination, InputAdornment, Select, InputLabel, FormControl,
 } from "@mui/material";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SearchIcon from '@mui/icons-material/Search';
 
 const deliveryData = [
@@ -128,40 +128,62 @@ const getStatusColor = (status) => {
     default: return "default";
   }
 };
+const categories = ["All", "Delivered", "Out for Delivery", "Pending", "Cancelled"];
+
 
 const DeliveryTracking = () => {
-  // const [orders] = useState(sampleOrders);
+  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [category, setCategory] = useState("All");
   const [page, setPage] = useState(1);
+  const rowsPerPage = 5;
   const theme = useTheme();
+
+  const filteredData = deliveryData.filter((item) =>
+    (category === "All" || item.status === category) &&
+    item.product.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
   return (
     <Box m={4}>
       <Typography variant="h4" mb={3}>Delivery Tracking</Typography>
       <Box mb={3} display="flex" justifyContent="flex-end" gap={2}>
-           <Grid item xs={12} sm={3}>
-          <FormControl sx={{width: "150px"}}>
-            <InputLabel ><CalendarMonthIcon/></InputLabel>
-            <Select label="" defaultValue="Today" >
-              <MenuItem value="Today">Today</MenuItem>
-              <MenuItem value="Yesterday">Yesterday</MenuItem>
-              <MenuItem value="one week">one week</MenuItem>
-              <MenuItem value="one month">one month</MenuItem>
+            <Grid item xs={12} sm={4}>
+          <FormControl fullWidth sx={{width: "150px"}}>
+            <InputLabel>Category</InputLabel>
+            <Select
+             size="small"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              label="Category"
+            >
+              {categories.map((c) => (
+                <MenuItem key={c} value={c}>{c}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
         
         <Grid item xs={12} sm={3}>
-             <TextField
-      fullWidth
-      placeholder="Search..."
-      variant="outlined"
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-    />
+          <TextField
+             size="small"
+                fullWidth
+                placeholder="Search..."
+                value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
         </Grid>
         </Box>
     
@@ -184,16 +206,16 @@ const DeliveryTracking = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {deliveryData.map((item, index) => (
-              <TableRow key={item.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.date}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.contact}</TableCell>
-                <TableCell>{item.product}</TableCell>
-                <TableCell>{item.location}</TableCell>
+            {paginatedData.map((row, i) => (
+              <TableRow key={row.id}>
+                <TableCell>{startIndex + i +1}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.contact}</TableCell>
+                <TableCell>{row.product}</TableCell>
+                <TableCell>{row.location}</TableCell>
                 <TableCell>
-                  <Chip label={item.status} color={getStatusColor(item.status)} />
+                  <Chip label={row.status} color={getStatusColor(row.status)} />
                 </TableCell>
                 <TableCell>
                   <Button size="small" variant="contained">Track</Button>
@@ -205,7 +227,7 @@ const DeliveryTracking = () => {
       </TableContainer>
       {/* Pagination */}
       <Box display="flex" justifyContent="center" mt={3}>
-        <Pagination count={5} page={page} onChange={(e, val) => setPage(val)} />
+        <Pagination count={totalPages} page={page} onChange={(e, val) => setPage(val)} />
       </Box>
     </Box>
   );

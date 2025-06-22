@@ -1,27 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Typography,
-  useTheme,
-  //Pagination
+  Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, IconButton, Typography, useTheme, TextField, InputAdornment,
+  Pagination, Stack
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import SearchIcon from "@mui/icons-material/Search";
 
 const ProductTable = ({ status }) => {
   const theme = useTheme();
-  // const [page, setPage] = useState(1);
-  // Fake product data for now
-const products = [
-  { id: "001", date: "10/11/2023", code: "001", category: "Men", subCategory: "T-shirt", product: "Men Printed Polo", price: "Rs. 100", gst: "10%", status: "Active" },
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const rowsPerPage = 10;
+
+  const products = [
+     { id: "001", date: "10/11/2023", code: "001", category: "Men", subCategory: "T-shirt", product: "Men Printed Polo", price: "Rs. 100", gst: "10%", status: "Active" },
   { id: "002", date: "11/11/2023", code: "002", category: "Men", subCategory: "Shirt", product: "Men Casual Shirt", price: "Rs. 350", gst: "12%", status: "Inactive" },
   { id: "003", date: "12/11/2023", code: "003", category: "Women", subCategory: "Kurti", product: "Women Ethnic Kurti", price: "Rs. 500", gst: "5%", status: "Active" },
   { id: "004", date: "13/11/2023", code: "004", category: "Women", subCategory: "Top", product: "Women Crop Top", price: "Rs. 250", gst: "10%", status: "Out of Stock" },
@@ -50,14 +45,53 @@ const products = [
   { id: "027", date: "06/12/2023", code: "027", category: "Kids", subCategory: "Shorts", product: "Kids Summer Shorts", price: "Rs. 190", gst: "5%", status: "Active" },
   { id: "028", date: "07/12/2023", code: "028", category: "Women", subCategory: "Palazzo", product: "Women Palazzo Pant", price: "Rs. 410", gst: "5%", status: "Inactive" },
   { id: "029", date: "08/12/2023", code: "029", category: "Men", subCategory: "Joggers", product: "Men Cotton Joggers", price: "Rs. 620", gst: "10%", status: "Out of Stock" },
-  { id: "030", date: "09/12/2023", code: "030", category: "Kids", subCategory: "Sweater", product: "Kids Knit Sweater", price: "Rs. 540", gst: "5%", status: "Active" }
-];
- const filtered = products.filter(
-    (prod) => prod.status.toLowerCase() === status.toLowerCase()
-  );
+  { id: "030", date: "09/12/2023", code: "030", category: "Kids", subCategory: "Sweater", product: "Kids Knit Sweater", price: "Rs. 540", gst: "5%", status: "Active" }];
+
+
+ 
+
+ // Normalize status to match tab values
+const normalize = (text) => text.toLowerCase().replace(/\s+/g, "-");
+
+const normalizedStatus = normalize(status);
+const filtered = products.filter(
+  (prod) => normalize(prod.status) === normalizedStatus
+);
+
+
+// Search filtering
+const searched = filtered.filter((prod) =>
+  prod.product.toLowerCase().includes(search.toLowerCase()) ||
+  prod.code.toLowerCase().includes(search.toLowerCase()) ||
+  prod.category.toLowerCase().includes(search.toLowerCase())
+);
+
+
+  const totalPages = Math.ceil(searched.length / rowsPerPage);
+  const paginated = searched.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <Box mt={2}>
+      {/* <Stack direction="row" justifyContent="space-between" mb={2}>
+        <Typography variant="h6">Product List</Typography>
+        <TextField
+          size="small"
+          placeholder="Search by name/code/category..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            )
+          }}
+        />
+      </Stack> */}
+
       <TableContainer
         component={Paper}
         sx={{
@@ -68,29 +102,25 @@ const products = [
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: theme.palette.primary.light }}>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Sl. no.</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Posted on</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Product code</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Category</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Sub Category</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Product</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Price</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>GST</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Status</TableCell>
-              <TableCell sx={{ color: theme.palette.primary.contrastText }}>Action</TableCell>
+              <TableCell>Sl. No.</TableCell>
+              <TableCell>Posted On</TableCell>
+              <TableCell>Code</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Sub Category</TableCell>
+              <TableCell>Product</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>GST</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filtered.map((row, i) => (
+            {paginated.map((row, index) => (
               <TableRow
                 key={row.id}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: theme.palette.action.hover,
-                  },
-                }}
+                sx={{ "&:hover": { backgroundColor: theme.palette.action.hover } }}
               >
-                <TableCell>{i + 1}</TableCell>
+                <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
                 <TableCell>{row.date}</TableCell>
                 <TableCell>{row.code}</TableCell>
                 <TableCell>{row.category}</TableCell>
@@ -107,7 +137,7 @@ const products = [
                           : row.status === "Inactive"
                           ? theme.palette.warning.main
                           : theme.palette.error.main,
-                      fontWeight: "bold",
+                      fontWeight: "bold"
                     }}
                   >
                     {row.status}
@@ -115,26 +145,35 @@ const products = [
                 </TableCell>
                 <TableCell>
                   <IconButton>
-                    <VisibilityIcon
-                      fontSize="small"
-                      sx={{ color: theme.palette.info.main }}
-                    />
+                    <VisibilityIcon fontSize="small" color="info" />
                   </IconButton>
                   <IconButton>
-                    <EditIcon
-                      fontSize="small"
-                      sx={{ color: theme.palette.primary.main }}
-                    />
+                    <EditIcon fontSize="small" color="secondary" />
                   </IconButton>
                 </TableCell>
               </TableRow>
             ))}
+            {paginated.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={10}>
+                  <Typography textAlign="center" color="text.secondary">
+                    No matching products found.
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-      {/* <Box display="flex" justifyContent="center" mt={3}>
-        <Pagination count={5} page={page} onChange={(e, val) => setPage(val)} />
-      </Box> */}
+
+      <Box display="flex" justifyContent="center" mt={3}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={(e, value) => setPage(value)}
+          color="primary"
+        />
+      </Box>
     </Box>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import {
-  Box, Typography, TextField, Button, Grid, MenuItem, Select,
+  Box, Typography, TextField, Button, MenuItem, Select,
   InputLabel, FormControl, Table, TableHead, TableRow, TableCell,
-  TableBody, Pagination, TableContainer, Paper
+  TableBody, Pagination, TableContainer, Paper, InputAdornment,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import SearchIcon from '@mui/icons-material/Search';
 
 const stockData = [
   { id: 1, code: "001", category: "Men", subCategory: "T-shirt", product: "Printed T-shirt", date: "07/12/2023", qty: 100 },
@@ -46,34 +47,44 @@ const Stocks = () => {
     <Box m={4}>
       <Typography variant="h4" mb={3}>Stocks</Typography>
 
-      {/* Filters */}
-      <Grid container spacing={2} mb={2}>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <FormControl fullWidth>
-            <InputLabel>Category</InputLabel>
-            <Select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              label="Category"
-            >
-              {categories.map((c) => (
-                <MenuItem key={c} value={c}>{c}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={4} display="flex" justifyContent="flex-end" alignItems="center">
-          <Button variant="contained" color="primary">+ New Product</Button>
-        </Grid>
-      </Grid>
+      <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" mb={2} gap={2}>
+  {/* Left side: Search and Category */}
+  <Box display="flex" gap={2} flexWrap="wrap">
+    <TextField
+      size="small"
+      label="Search..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+      }}
+    />
+
+    <FormControl size="small" sx={{ minWidth: 150 }}>
+      <InputLabel>Category</InputLabel>
+      <Select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        label="Category"
+      >
+        {categories.map((c) => (
+          <MenuItem key={c} value={c}>{c}</MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  </Box>
+
+  {/* Right side: Button */}
+  <Box>
+    <Button variant="contained" color="secondary">+ New Product</Button>
+  </Box>
+</Box>
+
+
 
       {/* Table */}
       <TableContainer component={Paper} sx={{
@@ -105,7 +116,7 @@ const Stocks = () => {
                 <TableCell>{row.qty}</TableCell>
                 <TableCell>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     size="small"
                     onClick={() => handleAddMore(row.id)}
                   >
