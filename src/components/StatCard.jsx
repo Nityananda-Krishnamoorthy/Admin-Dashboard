@@ -15,7 +15,7 @@ const iconMap = {
 const StatCard = ({ title, value }) => {
     const theme = useTheme();
   return (
-    <Card sx={{ p: 2, backgroundColor: theme.palette.background.alt, borderRadius: "8px", width:"220px"}}>
+    <Card sx={{ p: 2, backgroundColor: theme.palette.background.alt, borderRadius: "8px"}}>
       <CardContent>
         <Stack direction="row" spacing={2} alignItems="center">
           <Avatar sx={{backgroundColor: theme.palette.secondary.light}}>

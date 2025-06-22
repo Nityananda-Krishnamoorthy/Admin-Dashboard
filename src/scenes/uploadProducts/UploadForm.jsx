@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import {
   Box, TextField, Button, MenuItem, Select, FormControl,
   Typography, Grid, Link, Dialog, DialogTitle,
-  DialogContent, DialogActions, IconButton
+  DialogContent, DialogActions, 
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { SketchPicker } from "react-color";
 import { useTheme } from "@mui/material/styles";
 import DropzoneWrapper from "components/DropzoneWrapper";

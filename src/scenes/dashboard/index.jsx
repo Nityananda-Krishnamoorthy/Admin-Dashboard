@@ -7,12 +7,14 @@ import SalesLineChart from "../../components/SalesLineChart";
 import RevenuePieChart from "../../components/RevenuePieChart";
 import RecentOrdersTable from "../../components/RecentOrdersTable";
 import LowStock from "../../components/LowStock";
+import RecentExpensesTable from "../../components/RecentExpensesTable";
 
 
 const Dashboard = () => {
   const theme = useTheme();
   const [salesFilter, setSalesFilter] = useState("weekly");
   const [revenueFilter, setRevenueFilter] = useState("week");
+
 
   const stats = [
     { title: "Mens", value: 500 },
@@ -25,19 +27,20 @@ const Dashboard = () => {
     <Box p={3}>
       <Typography variant="h4" mb={2}>Dashboard</Typography>
 
-      <Grid container spacing={2}>
+      
+
+      <Grid container spacing={3} mt={2}>
+        <Grid container spacing={2} size={30} >
         {stats.map((stat) => (
-          <Grid item xs={12} sm={6} md={3} key={stat.title}>
+          <Grid item xs={12} size="grow" key={stat.title}>
             <StatCard title={stat.title} value={stat.value} />
           </Grid>
         ))}
       </Grid>
-
-      <Grid container spacing={3} mt={2}>
         {/* Sales Chart */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} size={8}>
           <Card sx={{ backgroundColor: theme.palette.background.alt, borderRadius: 2 }} fullWidth>
-            <CardContent sx={{width:"600px"}}>
+            <CardContent >
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h6">Sales Overview</Typography>
                 <FormControl size="small">
@@ -58,9 +61,9 @@ const Dashboard = () => {
         </Grid>
 
         {/* Revenue Pie */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} size={4}>
           <Card sx={{ backgroundColor: theme.palette.background.alt, borderRadius: 2 }} fullWidth>
-            <CardContent sx={{width:"300px"}}>
+            <CardContent>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h6">Revenue</Typography>
                 <FormControl size="small">
@@ -79,13 +82,17 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} size={8}>
           <RecentOrdersTable />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} size={4}>
           <LowStock />
         </Grid>
+        <Grid item size={12}>
+          <RecentExpensesTable />
+        </Grid>
       </Grid>
+      
     </Box>
   );
 };
