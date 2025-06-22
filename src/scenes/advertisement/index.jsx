@@ -24,42 +24,56 @@ const initialAds = [
 const AdvertisementPage = () => {
   const [ads, setAds] = useState(initialAds);
   const [open, setOpen] = useState(false);
-  const [editingAd, setEditingAd] = useState(null);
+  const [form, setForm] = useState({ category: "", heading: "", content: "", image: null, id: null });
+  const { getRootProps, getInputProps } = useDropzone({
+  accept: {
+    "image/*": []
+  },
+  onDrop: (acceptedFiles) => {
+    if (acceptedFiles.length) {
+      setForm((prev) => ({ ...prev, image: acceptedFiles[0] }));
+    }
+  }
+});
+  
 
   const theme = useTheme();
 
   const handleDelete = (id) => {
     setAds((prev) => prev.filter((ad) => ad.id !== id));
   };
-
-  const handleOpenDialog = (ad = null) => {
-    setEditingAd(ad);
-    setOpen(true);
-  };
-
   const handleCloseDialog = () => {
-    setEditingAd(null);
+    setForm(null);
     setOpen(false);
   };
 
-  const handleSave = () => {
-    if (!editingAd?.category || !editingAd?.image) return;
+  const handleOpenDialog = (ad = null) => {
+  if (ad) {
+    setForm({
+      ...ad,
+      image: ad.image, // If stored as file/url
+    });
+  } else {
+    setForm({ category: "", heading: "", content: "", image: null, id: null });
+  }
+  setOpen(true);
+};
 
-    if (editingAd.id) {
-      // Update
-      setAds((prev) =>
-        prev.map((ad) => (ad.id === editingAd.id ? editingAd : ad))
-      );
-    } else {
-      // Add new
-      setAds((prev) => [
-        ...prev,
-        { ...editingAd, id: prev.length + 1 }
-      ]);
-    }
+const handleSave = () => {
+  if (!form.category || !form.heading || !form.image) return;
 
-    handleCloseDialog();
+  const newAd = {
+    ...form,
+    id: form.id || ads.length + 1,
+    image: typeof form.image === "string" ? form.image : URL.createObjectURL(form.image)
   };
+
+  setAds((prev) =>
+    form.id ? prev.map((ad) => (ad.id === form.id ? newAd : ad)) : [...prev, newAd]
+  );
+  handleCloseDialog();
+};
+
 
   return (
     <Box p={3}>
@@ -87,6 +101,9 @@ const AdvertisementPage = () => {
                   </Typography>
                   <Typography color="text.secondary">Product Category</Typography>
                   <Typography fontWeight="500">{ad.category}</Typography>
+                  <Typography fontWeight="bold">{ad.heading}</Typography>
+                  <Typography color="text.secondary" fontSize="14px">{ad.content}</Typography>
+                  
                 </Box>
               </Box>
 
@@ -110,27 +127,57 @@ const AdvertisementPage = () => {
       <Dialog open={open} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>{editingAd?.id ? "Edit Advertisement" : "Add Advertisement"}</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Category"
-            fullWidth
-            margin="normal"
-            value={editingAd?.category || ""}
-            onChange={(e) => setEditingAd({ ...editingAd, category: e.target.value })}
-          />
-          <TextField
-            label="Image URL or Path"
-            fullWidth
-            margin="normal"
-            value={editingAd?.image || ""}
-            onChange={(e) => setEditingAd({ ...editingAd, image: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained" color="primary">
-            {editingAd?.id ? "Update" : "Add"}
-          </Button>
-        </DialogActions>
+  <FormControl fullWidth margin="normal" size="small">
+    <InputLabel>Category</InputLabel>
+    <Select
+      value={form.category}
+      onChange={(e) => setForm({ ...form, category: e.target.value })}
+      label="Category"
+    >
+      <MenuItem value="Mens">Mens</MenuItem>
+      <MenuItem value="Women">Women</MenuItem>
+      <MenuItem value="Kids">Kids</MenuItem>
+      <MenuItem value="Others">Others</MenuItem>
+    </Select>
+  </FormControl>
+
+  {/* Dropzone for Image */}
+  <Box
+    sx={{
+      border: "2px dashed grey",
+      p: 2,
+      textAlign: "center",
+      cursor: "pointer",
+      my: 2,
+    }}
+    {...getRootProps()}
+  >
+    <input {...getInputProps()} />
+    {form.image ? (
+      <img src={URL.createObjectURL(form.image)} alt="preview" style={{ width: 100 }} />
+    ) : (
+      <Typography>Drag or click to upload image</Typography>
+    )}
+  </Box>
+
+  <TextField
+    label="Heading"
+    fullWidth
+    margin="normal"
+    value={form.heading}
+    onChange={(e) => setForm({ ...form, heading: e.target.value })}
+  />
+  <TextField
+    label="Content"
+    fullWidth
+    multiline
+    minRows={3}
+    margin="normal"
+    value={form.content}
+    onChange={(e) => setForm({ ...form, content: e.target.value })}
+  />
+</DialogContent>
+        
       </Dialog>
     </Box>
   );
