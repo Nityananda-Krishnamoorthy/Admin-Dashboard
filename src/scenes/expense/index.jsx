@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  MenuItem
+} from "@mui/material";
+
+import {
   Box, Typography, Table, TableHead, TableRow, TableCell, TableBody,
   TableContainer, Paper, Button, TextField, Stack, Chip, InputAdornment, Pagination
 } from "@mui/material";
@@ -10,7 +18,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SearchIcon from '@mui/icons-material/Search';
 
-const expenses = [
+const expenseData = [
   { id: 1, date: "2023-11-15", category: "Electricity", subCategory: "Bill", description: "Monthly EB bill", amount: 1300, status: "Paid" },
   { id: 2, date: "2023-11-15", category: "Internet", subCategory: "Wi-Fi", description: "Office internet", amount: 1500, status: "Paid" },
   { id: 3, date: "2023-11-15", category: "Water", subCategory: "Utility", description: "Water bill", amount: 500, status: "Unpaid" },
@@ -39,9 +47,8 @@ const Expenses = () => {
   amount: "",
   status: "Paid",
 });
-const [expenses, setExpenses] = useState(expenseData); // use dynamic state instead of constant
-
-  // Filter logic
+const [expenses, setExpenses] = useState(expenseData);
+ // Filter logic
   const filtered = expenses.filter((item) => {
     const itemDate = dayjs(item.date);
     const from = fromDate ? dayjs(fromDate) : null;
