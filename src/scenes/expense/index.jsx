@@ -6,6 +6,12 @@ import {
   DialogActions,
   MenuItem
 } from "@mui/material";
+import {
+  Radio,
+  RadioGroup,
+  FormControl,
+  FormControlLabel,
+} from "@mui/material";
 
 import {
   Box, Typography, Table, TableHead, TableRow, TableCell, TableBody,
@@ -214,9 +220,9 @@ const [expenses, setExpenses] = useState(expenseData);
         <Button variant="outlined" color="secondary">Print</Button>
         <Button variant="contained" color="primary">Save</Button>
       </Stack>
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
   <DialogTitle>Add New Expense</DialogTitle>
-  <DialogContent>
+  <DialogContent sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
     <Stack spacing={2} mt={1}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
@@ -255,23 +261,26 @@ const [expenses, setExpenses] = useState(expenseData);
         value={newExpense.amount}
         onChange={(e) => setNewExpense({ ...newExpense, amount: Number(e.target.value) })}
       />
-      <TextField
-        label="Status"
-        select
-        fullWidth
-        size="small"
-        value={newExpense.status}
-        onChange={(e) => setNewExpense({ ...newExpense, status: e.target.value })}
-      >
-        <MenuItem value="Paid">Paid</MenuItem>
-        <MenuItem value="Unpaid">Unpaid</MenuItem>
-      </TextField>
+      <FormControl component="fieldset">
+  <Typography variant="body2" sx={{ mb: 1 }}>
+    Status
+  </Typography>
+  <RadioGroup
+    row
+    value={newExpense.status}
+    onChange={(e) => setNewExpense({ ...newExpense, status: e.target.value })}
+  >
+    <FormControlLabel value="Paid" color="success" control={<Radio />} label="Paid" />
+    <FormControlLabel value="Unpaid" color="error" control={<Radio />} label="Unpaid" />
+  </RadioGroup>
+</FormControl>
     </Stack>
   </DialogContent>
   <DialogActions>
-    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+    <Button onClick={() => setOpenDialog(false)} color="error">Cancel</Button>
     <Button
       variant="contained"
+      color="secondary"
       onClick={() => {
         setExpenses((prev) => [
           ...prev,
