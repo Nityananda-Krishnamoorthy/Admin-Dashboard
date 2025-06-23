@@ -127,7 +127,7 @@ const AdvertisementPage = () => {
   }}
 >
         <DialogTitle>{form.id ? "Edit Advertisement" : "Add Advertisement"}</DialogTitle>
-        <DialogContent sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
+        <DialogContent >
           <FormControl fullWidth margin="normal" size="small">
             <InputLabel>Category</InputLabel>
             <Select
