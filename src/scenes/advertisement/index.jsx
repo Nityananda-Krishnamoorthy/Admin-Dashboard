@@ -118,7 +118,7 @@ const AdvertisementPage = () => {
       </Grid>
 
       {/* Dialog */}
-      <Dialog open={open} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+      <Dialog open={open} onClose={handleCloseDialog} maxWidth="sm" fullWidth sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
         <DialogTitle>{form.id ? "Edit Advertisement" : "Add Advertisement"}</DialogTitle>
         <DialogContent sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
           <FormControl fullWidth margin="normal" size="small">
