@@ -10,7 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SearchIcon from '@mui/icons-material/Search';
 
-const expenseData = [
+const expenses = [
   { id: 1, date: "2023-11-15", category: "Electricity", subCategory: "Bill", description: "Monthly EB bill", amount: 1300, status: "Paid" },
   { id: 2, date: "2023-11-15", category: "Internet", subCategory: "Wi-Fi", description: "Office internet", amount: 1500, status: "Paid" },
   { id: 3, date: "2023-11-15", category: "Water", subCategory: "Utility", description: "Water bill", amount: 500, status: "Unpaid" },
@@ -30,9 +30,19 @@ const Expenses = () => {
   const [toDate, setToDate] = useState(null);
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newExpense, setNewExpense] = useState({
+  date: dayjs(),
+  category: "",
+  subCategory: "",
+  description: "",
+  amount: "",
+  status: "Paid",
+});
+const [expenses, setExpenses] = useState(expenseData); // use dynamic state instead of constant
 
   // Filter logic
-  const filtered = expenseData.filter((item) => {
+  const filtered = expenses.filter((item) => {
     const itemDate = dayjs(item.date);
     const from = fromDate ? dayjs(fromDate) : null;
     const to = toDate ? dayjs(toDate) : null;
@@ -107,7 +117,9 @@ const Expenses = () => {
                 )
               }}
             />
-            <Button variant="contained" color="secondary">+ Add Expense</Button>
+           <Button variant="contained" color="secondary" onClick={() => setOpenDialog(true)}>
+            + Add Expense
+           </Button>
           </Stack>
         </Stack>
       </LocalizationProvider>
@@ -195,6 +207,80 @@ const Expenses = () => {
         <Button variant="outlined" color="secondary">Print</Button>
         <Button variant="contained" color="primary">Save</Button>
       </Stack>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+  <DialogTitle>Add New Expense</DialogTitle>
+  <DialogContent>
+    <Stack spacing={2} mt={1}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Date"
+          value={newExpense.date}
+          onChange={(val) => setNewExpense({ ...newExpense, date: val })}
+          slotProps={{ textField: { fullWidth: true, size: "small" } }}
+        />
+      </LocalizationProvider>
+      <TextField
+        label="Category"
+        fullWidth
+        size="small"
+        value={newExpense.category}
+        onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+      />
+      <TextField
+        label="Sub Category"
+        fullWidth
+        size="small"
+        value={newExpense.subCategory}
+        onChange={(e) => setNewExpense({ ...newExpense, subCategory: e.target.value })}
+      />
+      <TextField
+        label="Description"
+        fullWidth
+        size="small"
+        value={newExpense.description}
+        onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
+      />
+      <TextField
+        label="Amount"
+        type="number"
+        fullWidth
+        size="small"
+        value={newExpense.amount}
+        onChange={(e) => setNewExpense({ ...newExpense, amount: Number(e.target.value) })}
+      />
+      <TextField
+        label="Status"
+        select
+        fullWidth
+        size="small"
+        value={newExpense.status}
+        onChange={(e) => setNewExpense({ ...newExpense, status: e.target.value })}
+      >
+        <MenuItem value="Paid">Paid</MenuItem>
+        <MenuItem value="Unpaid">Unpaid</MenuItem>
+      </TextField>
+    </Stack>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+    <Button
+      variant="contained"
+      onClick={() => {
+        setExpenses((prev) => [
+          ...prev,
+          {
+            ...newExpense,
+            id: prev.length + 1,
+            date: newExpense.date.format("YYYY-MM-DD"),
+          },
+        ]);
+        setOpenDialog(false);
+      }}
+    >
+      Add
+    </Button>
+  </DialogActions>
+</Dialog>
     </Box>
   );
 };
