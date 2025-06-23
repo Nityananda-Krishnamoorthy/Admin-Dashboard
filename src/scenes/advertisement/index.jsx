@@ -120,7 +120,7 @@ const AdvertisementPage = () => {
       {/* Dialog */}
       <Dialog open={open} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>{form.id ? "Edit Advertisement" : "Add Advertisement"}</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
           <FormControl fullWidth margin="normal" size="small">
             <InputLabel>Category</InputLabel>
             <Select
@@ -180,8 +180,8 @@ const AdvertisementPage = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>Save</Button>
+          <Button onClick={handleCloseDialog} color="error">Cancel</Button>
+          <Button variant="contained" color="secondary" onClick={handleSave}>Save</Button>
         </DialogActions>
       </Dialog>
     </Box>
