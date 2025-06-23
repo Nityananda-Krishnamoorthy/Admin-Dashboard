@@ -228,7 +228,7 @@ const [expenses, setExpenses] = useState(expenseData);
   }}
  open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth >
   <DialogTitle>Add New Expense</DialogTitle>
-  <DialogContent sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
+  <DialogContent >
     <Stack spacing={2} mt={1}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
