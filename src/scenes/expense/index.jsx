@@ -220,7 +220,13 @@ const [expenses, setExpenses] = useState(expenseData);
         <Button variant="outlined" color="secondary">Print</Button>
         <Button variant="contained" color="primary">Save</Button>
       </Stack>
-      <Dialog sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }} open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth >
+      <Dialog   PaperProps={{
+    sx: {
+      borderRadius: 2,
+      backgroundColor: theme.palette.background.alt,
+    },
+  }}
+ open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth >
   <DialogTitle>Add New Expense</DialogTitle>
   <DialogContent sx={{ borderRadius: 2, backgroundColor: theme.palette.background.alt }}>
     <Stack spacing={2} mt={1}>
