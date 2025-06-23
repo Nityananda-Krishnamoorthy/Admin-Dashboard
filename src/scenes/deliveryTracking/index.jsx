@@ -196,8 +196,8 @@ const DeliveryTracking = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSaveTrackingId}>
+          <Button onClick={handleCloseDialog} color="error">Cancel</Button>
+          <Button variant="contained" color="secondary" onClick={handleSaveTrackingId}>
             Save
           </Button>
         </DialogActions>
